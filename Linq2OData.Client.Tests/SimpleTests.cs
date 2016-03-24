@@ -14,25 +14,41 @@ namespace Linq2OData.Client.Tests
         [Test]
         public void GetList()
         {
-            var client = new Mock<IODataDataClient>();
-            client.Setup(x => x.Execute<Models.TestObject>(It.IsAny<IEnumerable<KeyValuePair<string, string>>>()))
-                .Callback<IEnumerable<KeyValuePair<string, string>>>(x =>
-                {
-                    Assert.IsTrue(x.Any(y => y.Key == "$filter"), "No filters provided");
-                })
-                .Returns(Enumerable.Empty<Models.TestObject>());
+            var ctx = new TestContext<Models.TestObject>();
 
+            ctx.Queryable.ToList();
 
-            client.Setup(x => x.Execute(It.IsAny<Type>(), It.IsAny<IEnumerable<KeyValuePair<string, string>>>()))
-                .Callback<Type, IEnumerable<KeyValuePair<string, string>>>((t, qs) =>
-                {
-                    Assert.IsTrue(qs.Any(y => y.Key == "$filter"), "No filters provided");
-                })
-                .Returns(new object[0]);
+            Assert.That(ctx.AllRequests, Has.Count.EqualTo(1));
+            Assert.That(ctx.LastRequest.QueryParts, Has.Count.EqualTo(0));
+            Assert.AreEqual(typeof(Models.TestObject), ctx.LastRequest.Type);
+        }
 
-            var queryable = new Linq2OData.Client.ODataQueryable<Models.TestObject>(client.Object);
+        [Test]
+        public void StringIsNull()
+        {
+            var ctx = new TestContext<Models.TestObject>();
 
-            var list = queryable.Where(x => true == true).ToList();
+            ctx.Queryable.Where(x => x.stringProperty == null).ToList();
+
+            Assert.That(ctx.AllRequests, Has.Count.EqualTo(1));
+            Assert.That(ctx.LastRequest.QueryParts, Has.Count.EqualTo(1));
+
+            Assert.AreEqual("stringProperty eq null", ctx.LastRequest.Parsed.Filter);
+        }
+
+        [Test]
+        public void StringIsNullOrEquals()
+        {
+            var ctx = new TestContext<Models.TestObject>();
+
+            ctx.Queryable.Where(x => x.stringProperty == null || x.stringProperty == "test").ToList();
+
+            Assert.That(ctx.AllRequests, Has.Count.EqualTo(1));
+            Assert.That(ctx.LastRequest.QueryParts, Has.Count.EqualTo(1));
+
+            var filterQuery = ctx.LastRequest.QueryParts.Where(y => y.Key == "$filter").Select(x => Uri.UnescapeDataString(x.Value)).Single();
+
+            Assert.AreEqual("(stringProperty eq null) or (stringProperty eq 'test')", ctx.LastRequest.Parsed.Filter);
         }
     }
 }

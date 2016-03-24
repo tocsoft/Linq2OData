@@ -8,7 +8,7 @@ namespace Linq2OData.Client.Provider.Writers
 {
     internal class BooleanValueWriter : ValueWriterBase<bool>
     {
-        public override string Write(object value)
+        public override string Write(object value, ODataExpressionConverterSettings settings)
         {
             var boolean = (bool)value;
 

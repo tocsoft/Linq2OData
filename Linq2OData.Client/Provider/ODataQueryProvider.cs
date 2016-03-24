@@ -13,22 +13,24 @@ namespace Linq2OData.Client.Provider
         private readonly IODataDataClient client;
         private readonly ExpressionProcessor _expressionProcessor;
         private readonly ParameterBuilder _parameterBuilder;
+        readonly ODataExpressionConverterSettings settings;
 
-        public ODataQueryProvider(IODataDataClient client)
+        public ODataQueryProvider(IODataDataClient client, ODataExpressionConverterSettings settings)
         {
+            this.settings = settings;
             this.client = client;
-            _expressionProcessor = new ExpressionProcessor();
+            _expressionProcessor = new ExpressionProcessor(settings);
             _parameterBuilder = new ParameterBuilder();
         }
 
         public IQueryable CreateQuery(Expression expression)
         {
-            return new ODataQueryable<TType>(client, expression);
+            return new ODataQueryable<TType>(client, settings, expression);
         }
 
         public IQueryable<TElement> CreateQuery<TElement>(Expression expression)
         {
-            return new ODataQueryable<TElement>(client, expression);
+            return new ODataQueryable<TElement>(client, settings, expression);
         }
 
         public object Execute(Expression expression)

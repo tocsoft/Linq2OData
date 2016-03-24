@@ -33,7 +33,7 @@ namespace Linq2OData.Client.Provider
             var parameters = new List<KeyValuePair<string, string>>();
             if (!string.IsNullOrWhiteSpace(FilterParameter))
             {
-                parameters.Add(BuildParameter(StringConstants.FilterParameter, Uri.EscapeDataString(FilterParameter)));
+                parameters.Add(BuildParameter(StringConstants.FilterParameter, FilterParameter));
             }
 
             if (!string.IsNullOrWhiteSpace(SelectParameter))

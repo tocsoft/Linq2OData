@@ -7,16 +7,25 @@ using System.Threading.Tasks;
 
 namespace Linq2OData.Client.Provider.Writers
 {
-    internal interface IMethodCallWriter
+    public interface IMethodCallWriter
     {
         bool CanHandle(MethodCallExpression expression);
 
-        string Handle(MethodCallExpression expression, Func<Expression, string> expressionWriter);
+        string Handle(MethodCallExpression expression, Func<Expression, string> expressionWriter, ODataExpressionConverterSettings settings);
     }
-    internal interface IValueWriter
+
+    public interface IMemberCallWriter
+    {
+        bool CanHandle(MemberExpression expression);
+
+        string Handle(MemberExpression expression, ODataExpressionConverterSettings settings);
+    }
+
+    public interface IValueWriter
     {
         bool Handles(Type type);
 
-        string Write(object value);
+        string Write(object value, ODataExpressionConverterSettings settings);
     }
+
 }

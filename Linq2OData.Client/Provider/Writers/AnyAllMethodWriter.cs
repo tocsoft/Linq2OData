@@ -18,7 +18,7 @@ namespace Linq2OData.Client.Provider.Writers
             return expression.Method.Name == "Any" || expression.Method.Name == "All";
         }
 
-        public string Handle(MethodCallExpression expression, Func<Expression, string> expressionWriter)
+        public string Handle(MethodCallExpression expression, Func<Expression, string> expressionWriter, ODataExpressionConverterSettings settings)
         {
             Contract.Assert(expression.Method != null);
             Contract.Assert(expression.Arguments != null);

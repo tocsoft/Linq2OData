@@ -18,28 +18,20 @@ namespace Linq2OData.Client.Provider
         /// <returns>A string value.</returns>
         string Write(Expression expression);
     }
+
     internal class ExpressionWriter : IExpressionWriter
     {
-        private static readonly ExpressionType[] CompositeExpressionTypes = new[] { ExpressionType.Or, ExpressionType.OrElse, ExpressionType.And, ExpressionType.AndAlso };
-        private readonly IMethodCallWriter[] _methodCallWriters = new IMethodCallWriter[]
-                                                                {
-                                                                    //new EqualsMethodWriter(),
-                                                                    //new StringReplaceMethodWriter(),
-                                                                    //new StringTrimMethodWriter(),
-                                                                    //new StringToLowerMethodWriter(),
-                                                                    //new StringToUpperMethodWriter(),
-                                                                    //new StringSubstringMethodWriter(),
-                                                                    //new StringContainsMethodWriter(),
-                                                                    //new StringIndexOfMethodWriter(),
-                                                                    //new StringEndsWithMethodWriter(),
-                                                                    //new StringStartsWithMethodWriter(),
-                                                                    //new MathRoundMethodWriter(),
-                                                                    //new MathFloorMethodWriter(),
-                                                                    //new MathCeilingMethodWriter(),
-                                                                    // new EmptyAnyMethodWriter(),
-                                                                    new AnyAllMethodWriter(),
-                                                                    //new DefaultMethodWriter()
-                                                                };
+        readonly ODataExpressionConverterSettings settings;
+
+        public ExpressionWriter(ODataExpressionConverterSettings settings)
+        {
+            this.settings = settings;
+        }
+
+        private static readonly ExpressionType[] CompositeExpressionTypes = { ExpressionType.Or, ExpressionType.OrElse, ExpressionType.And, ExpressionType.AndAlso };
+        private static readonly Type[] GroupedExpressionTypes = { typeof(BinaryExpression) };
+
+
 
         public string Write(Expression expression)
         {
@@ -61,30 +53,36 @@ namespace Linq2OData.Client.Provider
             }
         }
 
-        private static string GetMemberCall(MemberExpression memberExpression)
+        private string GetMemberCall(MemberExpression memberExpression)
         {
-
-            var declaringType = memberExpression.Member.DeclaringType;
-            var name = memberExpression.Member.Name;
-
-            if (declaringType == typeof(string) && string.Equals(name, "Length"))
+            var writer = settings.MemberCallWriters.FirstOrDefault(x => x.CanHandle(memberExpression));
+            if (writer != null)
             {
-                return name.ToLowerInvariant();
+                return writer.Handle(memberExpression, settings);
             }
 
-            if (declaringType == typeof(DateTime))
-            {
-                switch (name)
-                {
-                    case "Hour":
-                    case "Minute":
-                    case "Second":
-                    case "Day":
-                    case "Month":
-                    case "Year":
-                        return name.ToLowerInvariant();
-                }
-            }
+
+            //var declaringType = memberExpression.Member.DeclaringType;
+            //var name = memberExpression.Member.Name;
+
+            //if (declaringType == typeof(string) && string.Equals(name, "Length"))
+            //{
+            //    return name.ToLowerInvariant();
+            //}
+
+            //if (declaringType == typeof(DateTime))
+            //{
+            //    switch (name)
+            //    {
+            //        case "Hour":
+            //        case "Minute":
+            //        case "Second":
+            //        case "Day":
+            //        case "Month":
+            //        case "Year":
+            //            return name.ToLowerInvariant();
+            //    }
+            //}
 
             return string.Empty;
         }
@@ -234,13 +232,16 @@ namespace Linq2OData.Client.Provider
             {
                 case ExpressionType.Parameter:
                     var parameterExpression = expression as ParameterExpression;
-
+                    if(parameterExpression == rootParameter)
+                    {
+                        return StringConstants.ItParamater;
+                    }
 
                     return parameterExpression.Name;
                 case ExpressionType.Constant:
                     {
                         var value = GetValue(Expression.Convert(expression, type));
-                        return ParameterValueWriter.Write(value);
+                        return ParameterValueWriter.Write(value, settings);
                     }
 
                 case ExpressionType.Add:
@@ -283,7 +284,7 @@ namespace Linq2OData.Client.Provider
                 case ExpressionType.Conditional:
                 case ExpressionType.Coalesce:
                     var newValue = GetValue(expression);
-                    return ParameterValueWriter.Write(newValue);
+                    return ParameterValueWriter.Write(newValue, settings);
                 case ExpressionType.Lambda:
                     return WriteLambda(expression, rootParameter);
                 default:
@@ -307,7 +308,7 @@ namespace Linq2OData.Client.Provider
 
             var operand = unaryExpression.Operand;
 
-            return string.Format("not({0})", Write(operand, rootParameterName));
+            return string.Format("not {0}", Write(operand, rootParameterName));
         }
 
         private string WriteTrue(Expression expression, ParameterExpression rootParameterName)
@@ -344,8 +345,14 @@ namespace Linq2OData.Client.Provider
 
             if (memberExpression.Expression == null)
             {
+                var staticMemberCall = GetMemberCall(memberExpression);
+                if (!string.IsNullOrWhiteSpace(staticMemberCall))
+                {
+                    return $"{staticMemberCall}()";
+                }
                 var memberValue = GetValue(memberExpression);
-                return ParameterValueWriter.Write(memberValue);
+
+                return ParameterValueWriter.Write(memberValue, settings);
             }
 
             var pathPrefixes = new List<string>();
@@ -432,8 +439,10 @@ namespace Linq2OData.Client.Provider
                 }
             }
 
-            var isLeftComposite = CompositeExpressionTypes.Any(x => x == binaryExpression.Left.NodeType);
-            var isRightComposite = CompositeExpressionTypes.Any(x => x == binaryExpression.Right.NodeType);
+            var isLeftComposite = CompositeExpressionTypes.Any(x => x == binaryExpression.Left.NodeType) ||
+                                    GroupedExpressionTypes.Any(x => x.IsAssignableFrom(binaryExpression.Left.GetType()));
+            var isRightComposite = CompositeExpressionTypes.Any(x => x == binaryExpression.Right.NodeType) ||
+                                    GroupedExpressionTypes.Any(x => x.IsAssignableFrom(binaryExpression.Right.GetType()));
 
             var leftType = GetUnconvertedType(binaryExpression.Left);
             var leftString = Write(binaryExpression.Left, rootParameterName);
@@ -471,13 +480,13 @@ namespace Linq2OData.Client.Provider
         private string GetMethodCall(MethodCallExpression expression, ParameterExpression rootParameterName)
         {
 
-            var methodCallWriter = _methodCallWriters.FirstOrDefault(w => w.CanHandle(expression));
+            var methodCallWriter = settings.MethodCallWriters.FirstOrDefault(w => w.CanHandle(expression));
             if (methodCallWriter == null)
             {
                 throw new NotSupportedException(expression + " is not supported");
             }
 
-            return methodCallWriter.Handle(expression, e => Write(e, rootParameterName));
+            return methodCallWriter.Handle(expression, e => Write(e, rootParameterName), settings);
         }
     }
 }

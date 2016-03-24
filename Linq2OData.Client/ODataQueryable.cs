@@ -12,19 +12,26 @@ namespace Linq2OData.Client
     public class ODataQueryable<TType> : IQueryable<TType>
     {
         private readonly ODataQueryProvider<TType> queryProvider;
+        private readonly ODataExpressionConverterSettings settings;
 
-        public ODataQueryable(IODataDataClient client)
+        public ODataQueryable(IODataDataClient client) : this(client, ODataExpressionConverterSettings.Default)
         {
-            queryProvider = new ODataQueryProvider<TType>(client);
+        }
+
+        public ODataQueryable(IODataDataClient client, ODataExpressionConverterSettings settings)
+        {
+            queryProvider = new ODataQueryProvider<TType>(client, settings);
             Provider = queryProvider;
             Expression = Expression.Constant(this);
         }
 
-        public ODataQueryable(IODataDataClient client, Expression expression)
+
+        internal ODataQueryable(IODataDataClient client, ODataExpressionConverterSettings settings, Expression expression)
         {
-            queryProvider = new ODataQueryProvider<TType>(client);
+            queryProvider = new ODataQueryProvider<TType>(client, settings);
             Provider = queryProvider;
             Expression = expression;
+            this.settings = settings;
         }
 
         public Type ElementType

@@ -13,6 +13,6 @@ namespace Linq2OData.Client.Provider.Writers
             return typeof(T) == type;
         }
 
-        public abstract string Write(object value);
+        public abstract string Write(object value, ODataExpressionConverterSettings settings);
     }
 }
