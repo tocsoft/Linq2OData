@@ -9,7 +9,7 @@ using Linq2OData.Client.Provider;
 
 namespace Linq2OData.Client
 {
-    public class ODataQueryable<TType> : IQueryable<TType>
+    public class ODataQueryable<TType> : IQueryable<TType>, IOrderedQueryable<TType>
     {
         private readonly ODataQueryProvider<TType> queryProvider;
         private readonly ODataExpressionConverterSettings settings;
@@ -19,20 +19,24 @@ namespace Linq2OData.Client
         }
 
         public ODataQueryable(IODataDataClient client, ODataExpressionConverterSettings settings)
+            :this(new ODataQueryProvider<TType>(client, settings), settings, null)
         {
-            queryProvider = new ODataQueryProvider<TType>(client, settings);
-            Provider = queryProvider;
             Expression = Expression.Constant(this);
         }
 
 
         internal ODataQueryable(IODataDataClient client, ODataExpressionConverterSettings settings, Expression expression)
+            : this(new ODataQueryProvider<TType>(client, settings), settings, expression)
         {
-            queryProvider = new ODataQueryProvider<TType>(client, settings);
+        }
+
+        internal ODataQueryable(ODataQueryProvider<TType> queryProvider, ODataExpressionConverterSettings settings, Expression expression)
+        {
             Provider = queryProvider;
             Expression = expression;
             this.settings = settings;
         }
+
 
         public Type ElementType
         {

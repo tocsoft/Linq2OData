@@ -74,10 +74,12 @@ namespace Linq2OData.Client.Tests
             public RequestParsed(IEnumerable<KeyValuePair<string, string>> parts)
             {
                 Filter = parts.Where(y => y.Key == "$filter").Select(x => x.Value).SingleOrDefault();
+                OrderBy = parts.Where(y => y.Key == "$orderby").Select(x => x.Value).SingleOrDefault();
 
             }
 
             public string Filter { get; private set; }
+            public string OrderBy { get; private set; }
         }
     }
 }

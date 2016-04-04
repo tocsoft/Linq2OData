@@ -53,6 +53,7 @@
     <Compile Include="Models\TestObject.cs" />
     <Compile Include="DateFunctionTests.cs" />
     <Compile Include="ItTests.cs" />
+    <Compile Include="OrderedQueryable.cs" />
     <Compile Include="ValueTests.cs" />
     <Compile Include="StringFunctionTests.cs" />
     <Compile Include="OperationTests.cs" />
