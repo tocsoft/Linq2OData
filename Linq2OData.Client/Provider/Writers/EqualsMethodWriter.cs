@@ -13,8 +13,6 @@ namespace Linq2OData.Client.Provider.Writers
 
         public string Handle(MethodCallExpression expression, Func<Expression, string> expressionWriter, ODataExpressionConverterSettings settings)
         {
-            Contract.Assert(expression.Arguments != null);
-
             return string.Format(
                 "{0} eq {1}",
                 expressionWriter(expression.Object),

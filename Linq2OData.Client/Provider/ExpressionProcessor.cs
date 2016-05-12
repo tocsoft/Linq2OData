@@ -257,9 +257,7 @@ namespace Linq2OData.Client.Provider
 
             var genericArguments = methodCall.Method.GetGenericArguments();
             var queryableMethods = typeof(Queryable).GetMethods();
-
-            //Contract.Assume(queryableMethods.Any());
-
+            
             var nonGenericMethod = queryableMethods
                 .Single(x => x.Name == methodCall.Method.Name && x.GetParameters().Length == 1);
 
