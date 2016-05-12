@@ -16,6 +16,7 @@ build_script:
 
 after_build:
   - cmd: appveyor PushArtifact "Build\Linq2OData.Client.%GitVersion_NuGetVersion%.nupkg"
+  - cmd: appveyor PushArtifact "Build\Linq2OData.Server.%GitVersion_NuGetVersion%.nupkg"
 deploy:
 - provider: NuGet
   server: https://www.myget.org/F/tocsoft/api/v2/package
