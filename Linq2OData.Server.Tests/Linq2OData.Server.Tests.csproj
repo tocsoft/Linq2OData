@@ -47,6 +47,7 @@
     <Compile Include="AssertExpression.cs" />
     <Compile Include="Models\TestObject.cs" />
     <Compile Include="StringFunctionTests.cs" />
+    <Compile Include="MaxRows.cs" />
     <Compile Include="ValueTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -11,12 +11,23 @@ namespace Linq2OData.Server
     {
         public static IQueryable<object> Filter<T>(this IEnumerable<T> source, IEnumerable<KeyValuePair<string, string>> query)
         {
+            return Filter(source, query, Linq2ODataSettings.Defaults);
+        }
 
-            var parser = new ParameterParser<T>();
+        public static IQueryable<object> Filter<T>(this IEnumerable<T> source, IEnumerable<KeyValuePair<string, string>> query, Linq2ODataSettings settings)
+        {
+
+            var parser = new ParameterParser<T>(settings);
 
             return Filter(source, parser.Parse(query));
         }
+
         public static IQueryable<object> Filter<T>(this IEnumerable<T> source, string filter)
+        {
+            return Filter(source, filter, Linq2ODataSettings.Defaults);
+        }
+
+        public static IQueryable<object> Filter<T>(this IEnumerable<T> source, string filter, Linq2ODataSettings settings)
         {
             return Filter(source, new Dictionary<string, string>() { { StringConstants.FilterParameter, filter } });
         }

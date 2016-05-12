@@ -26,10 +26,12 @@ namespace Linq2OData.Server
 		private readonly int _skip;
 		private readonly IEnumerable<SortDescription<T>> _sortDescriptions;
 		private readonly int _top;
+        private readonly Linq2ODataSettings _settings;
 
-		public ModelFilter(Expression<Func<T, bool>> filterExpression, Expression<Func<T, object>> selectExpression, IEnumerable<SortDescription<T>> sortDescriptions, int skip, int top)
+        public ModelFilter(Linq2ODataSettings settings, Expression<Func<T, bool>> filterExpression, Expression<Func<T, object>> selectExpression, IEnumerable<SortDescription<T>> sortDescriptions, int skip, int top)
 		{
-			_skip = skip;
+            _settings = settings;
+            _skip = skip;
 			_top = top;
 			_filterExpression = filterExpression;
 			_selectExpression = selectExpression;
@@ -42,9 +44,17 @@ namespace Linq2OData.Server
 		public int TakeCount
 		{
 			get
-			{
-				return _top;
-			}
+            {
+                if (_settings.MaxRows.HasValue)
+                {
+                    if (_top > -1)
+                    {
+                        return Math.Min(_settings.MaxRows.Value, _top);
+                    }
+                    else { return _settings.MaxRows.Value; }
+                }
+                return _top;
+            }
 		}
 
 		/// <summary>
@@ -109,14 +119,14 @@ namespace Linq2OData.Server
 				}
 			}
 
-			if (_skip > 0)
+			if (SkipCount > 0)
 			{
-				result = result.Skip(_skip);
+				result = result.Skip(SkipCount);
 			}
 
-			if (_top > -1)
+			if (TakeCount > -1)
 			{
-				result = result.Take(_top);
+				result = result.Take(TakeCount);
 			}
             
 

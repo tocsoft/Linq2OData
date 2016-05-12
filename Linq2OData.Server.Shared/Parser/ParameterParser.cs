@@ -27,13 +27,14 @@ namespace Linq2OData.Server.Parser
 	{
 		private readonly IFilterExpressionFactory _filterExpressionFactory;
 		private readonly ISelectExpressionFactory<T> _selectExpressionFactory;
-		private readonly ISortExpressionFactory _sortExpressionFactory;
+        private readonly Linq2ODataSettings _settings;
+        private readonly ISortExpressionFactory _sortExpressionFactory;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ParameterParser{T}"/> class.
 		/// </summary>
-		public ParameterParser()
-			: this(new MemberNameResolver())
+		public ParameterParser(Linq2ODataSettings settings)
+			: this(settings, new MemberNameResolver())
 		{
 		}
 
@@ -41,8 +42,8 @@ namespace Linq2OData.Server.Parser
 		/// Initializes a new instance of the <see cref="ParameterParser{T}"/> class.
 		/// </summary>
 		/// <param name="memberNameResolver">The <see cref="IMemberNameResolver"/> to use for name resolution.</param>
-		public ParameterParser(IMemberNameResolver memberNameResolver)
-			: this(new FilterExpressionFactory(memberNameResolver, Enumerable.Empty<IValueExpressionFactory>()), new SortExpressionFactory(memberNameResolver), new SelectExpressionFactory<T>(memberNameResolver, new RuntimeTypeProvider(memberNameResolver)))
+		public ParameterParser(Linq2ODataSettings settings, IMemberNameResolver memberNameResolver)
+			: this(settings, new FilterExpressionFactory(memberNameResolver, Enumerable.Empty<IValueExpressionFactory>()), new SortExpressionFactory(memberNameResolver), new SelectExpressionFactory<T>(memberNameResolver, new RuntimeTypeProvider(memberNameResolver)))
 		{
 			
 		}
@@ -52,8 +53,8 @@ namespace Linq2OData.Server.Parser
 		/// </summary>
 		/// <param name="memberNameResolver">The <see cref="IMemberNameResolver"/> to use for name resolution.</param>
 		/// <param name="valueExpressionFactories">The custom <see cref="IValueExpressionFactory"/> to use for value conversion.</param>
-		public ParameterParser(IMemberNameResolver memberNameResolver, IEnumerable<IValueExpressionFactory> valueExpressionFactories)
-			: this(new FilterExpressionFactory(memberNameResolver, valueExpressionFactories), new SortExpressionFactory(memberNameResolver), new SelectExpressionFactory<T>(memberNameResolver, new RuntimeTypeProvider(memberNameResolver)))
+		public ParameterParser(Linq2ODataSettings settings, IMemberNameResolver memberNameResolver, IEnumerable<IValueExpressionFactory> valueExpressionFactories)
+			: this(settings, new FilterExpressionFactory(memberNameResolver, valueExpressionFactories), new SortExpressionFactory(memberNameResolver), new SelectExpressionFactory<T>(memberNameResolver, new RuntimeTypeProvider(memberNameResolver)))
 		{
 		}
 
@@ -64,12 +65,13 @@ namespace Linq2OData.Server.Parser
 		/// <param name="sortExpressionFactory">The <see cref="ISortExpressionFactory"/> to use.</param>
 		/// <param name="selectExpressionFactory">The <see cref="ISelectExpressionFactory{T}"/> to use.</param>
 		public ParameterParser(
-			IFilterExpressionFactory filterExpressionFactory,
+            Linq2ODataSettings settings,
+            IFilterExpressionFactory filterExpressionFactory,
 			ISortExpressionFactory sortExpressionFactory,
 			ISelectExpressionFactory<T> selectExpressionFactory)
 		{
-
-			_filterExpressionFactory = filterExpressionFactory;
+            _settings = settings;
+            _filterExpressionFactory = filterExpressionFactory;
 			_sortExpressionFactory = sortExpressionFactory;
 			_selectExpressionFactory = selectExpressionFactory;
 		}
@@ -92,6 +94,7 @@ namespace Linq2OData.Server.Parser
 			var selectFunction = _selectExpressionFactory.Create(selects);
 
 			var modelFilter = new ModelFilter<T>(
+                _settings,
 				filterExpression,
 				selectFunction,
 				sortDescriptions,
