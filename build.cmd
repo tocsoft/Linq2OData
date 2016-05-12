@@ -37,6 +37,9 @@ mkdir Build
 call "%nuget%" pack "Linq2OData.Client\Linq2OData.Client.csproj" -IncludeReferencedProjects -o Build -p Configuration=%config% %version%
 if not "%errorlevel%"=="0" goto failure
 
+call "%nuget%" pack "Linq2OData.Server.DotNet\Linq2OData.Server.DotNet.csproj" -IncludeReferencedProjects -o Build -p Configuration=%config% %version%
+if not "%errorlevel%"=="0" goto failure
+
 
 :success
 ECHO successfully built project

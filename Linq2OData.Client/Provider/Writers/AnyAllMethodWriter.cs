@@ -13,16 +13,11 @@ namespace Linq2OData.Client.Provider.Writers
     {
         public bool CanHandle(MethodCallExpression expression)
         {
-            Contract.Assert(expression.Method != null);
-
             return expression.Method.Name == "Any" || expression.Method.Name == "All";
         }
 
         public string Handle(MethodCallExpression expression, Func<Expression, string> expressionWriter, ODataExpressionConverterSettings settings)
         {
-            Contract.Assert(expression.Method != null);
-            Contract.Assert(expression.Arguments != null);
-
             var firstArg = expressionWriter(expression.Arguments[0]);
             var method = expression.Method.Name.ToLowerInvariant();
             string parameter = null;
