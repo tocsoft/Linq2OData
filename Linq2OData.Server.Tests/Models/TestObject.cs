@@ -13,6 +13,8 @@ namespace Linq2OData.Server.Tests.Models
         public string stringProperty { get; set; }
         public string secondStringProperty { get; set; }
         public Guid guidProperty { get; set; }
+        public Guid secondGuidProperty { get; set; }
+        public Guid? guidNullProperty { get; set; }
 
         public int intProperty { get; set; }
         public int secondIntProperty { get; set; }

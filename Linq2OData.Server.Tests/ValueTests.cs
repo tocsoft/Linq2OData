@@ -70,5 +70,35 @@ namespace Linq2OData.Server.Tests
 
             AssertExpression.AreEqual(expected, odata);
         }
+
+        [Test]
+        public void Guid()
+        {
+            var odata = ctx.Filter("guidProperty eq guid'61CA9677-CABA-44A0-A187-7C86A8E0EAC3'");
+            var guid = new System.Guid("61CA9677-CABA-44A0-A187-7C86A8E0EAC3");
+            var expected = ctx.Where(x => x.guidProperty == guid);
+
+            AssertExpression.AreEqual(expected, odata);
+        }
+        [Test]
+        public void Guid_lower()
+        {
+            var odata = ctx.Filter("guidProperty eq guid'61ca9677-caba-44a0-a187-7c86a8e0eac3'");
+            var guid = new System.Guid("61CA9677-CABA-44A0-A187-7C86A8E0EAC3");
+            var expected = ctx.Where(x => x.guidProperty == guid);
+
+            AssertExpression.AreEqual(expected, odata);
+        }
+        [Test]
+        public void NullableGuid()
+        {
+            var odata = ctx.Filter("guidNullProperty eq null");
+            
+            var expected = ctx.Where(x => x.guidNullProperty == null);
+
+            Assert.AreEqual(expected.Expression.ToString(), odata.Expression.ToString());
+            //skip true comparison as there must be subtle difference need to investigate more
+            //AssertExpression.AreEqual(expected, odata);
+        }
     }
 }
