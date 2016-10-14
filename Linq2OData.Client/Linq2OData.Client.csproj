@@ -51,7 +51,9 @@
     <Compile Include="Provider\Writers\BooleanValueWriter.cs" />
     <Compile Include="Provider\Writers\ByteArrayValueWriter.cs" />
     <Compile Include="Provider\Writers\DateWriterModule.cs" />
+    <Compile Include="Provider\Writers\GuidValueWriter.cs" />
     <Compile Include="Provider\Writers\EnumValueWriter.cs" />
+    <Compile Include="Provider\Writers\GuidWriterModule.cs" />
     <Compile Include="Provider\Writers\EnumWriterModule.cs" />
     <Compile Include="Provider\Writers\EqualsMethodWriter.cs" />
     <Compile Include="Provider\Writers\GenericMemberWriter.cs" />

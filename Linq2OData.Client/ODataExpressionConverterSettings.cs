@@ -67,6 +67,7 @@ namespace Linq2OData.Client
             StringWriterModule.RegisterWriters(this);
             MathWriterModule.RegisterWriters(this);
             EnumWriterModule.RegisterWriters(this);
+            GuidWriterModule.RegisterWriters(this);
 
             this.RegisterValueWriter<bool>(v => v ? "True" : "False");
         }
