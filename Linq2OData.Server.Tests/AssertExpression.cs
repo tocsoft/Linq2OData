@@ -7,20 +7,20 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using NUnit.Framework;
+using Xunit;
 
 namespace Linq2OData.Server.Tests
 {
     public static class AssertExpression
     {
-        public static void AreEqual(IQueryable expected, IQueryable actual)
+        public static void Equal(IQueryable expected, IQueryable actual)
         {
-            AreEqual(expected.Expression, actual.Expression);
+            Equal(expected.Expression, actual.Expression);
         }
-        public static void AreEqual(Expression expected, Expression actual)
+        public static void Equal(Expression expected, Expression actual)
         {
             var areEqual = ExpressionsEqual(expected, actual, null, null);
-            Assert.IsTrue(areEqual, $"Expected [{expected.ToString()}] but found [{actual.ToString()}]");
+            Assert.True(areEqual, $"Expected [{expected.ToString()}] but found [{actual.ToString()}]");
         }
 
         private static bool ExpressionsEqual(Expression x, Expression y, LambdaExpression rootX, LambdaExpression rootY)

@@ -1,0 +1,70 @@
+name: Build
+
+on: 
+  push:
+    branches:
+      - master
+    tags: 
+      - 'v*'
+  pull_request:
+    branches:
+      - master
+    
+jobs:
+  # Coverage:
+  #   runs-on:   windows-latest
+  #   needs: [Build]
+  #   steps:      
+  #   - uses: actions/checkout@v1
+    
+  #   - name: Generate Test Coverage
+  #     shell: pwsh
+  #     run: ./tests/CodeCoverage/CodeCoverage.ps1
+  #     env:
+  #       CI : True
+
+  #   - name: Update codecov
+  #     uses: iansu/codecov-action-node@v1.0.0
+  #     with:
+  #       token: ${{secrets.CODECOV_TOKEN}}
+  #       file: "ImageSharp.Coverage.xml"
+  #       flags: unittests
+ 
+  Build:
+    strategy:
+        matrix:
+          os: [ubuntu-latest, windows-latest]
+
+    runs-on:  ${{ matrix.os }}
+
+    steps:      
+    - uses: actions/checkout@v1
+      
+    - name: Run tests
+      shell: pwsh
+      run: dotnet test -c release
+
+  Publish:
+    runs-on: windows-latest
+    needs: [Build]
+    if : github.event_name == 'push'
+    steps:      
+    - uses: actions/checkout@v1
+    
+    - name: Build
+      shell: pwsh
+      run: dotnet pack -c release -o artifacts
+
+    - name : install nuget
+      if: success()
+      uses: warrenbuckley/Setup-Nuget@v1
+
+    - name: Configure feed
+      if: success()
+      run: nuget.exe source Add -Name "GitHub" -Source "https://nuget.pkg.github.com/${{github.actor}}/index.json" -UserName ${{github.actor}} -Password ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Publish to nightly feed
+      if: success()
+      run: nuget.exe push  -Source "GitHub" .\artifacts\*.nupkg        
+    
+    # todo if github.ref starts with 'refs/tags' then it was tag push and we can optionally push out package to nuget.org

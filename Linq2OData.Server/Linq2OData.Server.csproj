@@ -1,9 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <Authors>Tocsoft</Authors>
-    <Description>A thin netstandard IQueryable interface over a simple odate endpoint. Compatable with odata endpoints powered by Linq2OData.Server
+    <TargetFrameworks>netcoreapp2.0;netcoreapp3.0;net461</TargetFrameworks>
+   <Authors>Tocsoft</Authors>
+    <LangVersion>8.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <Description>Extension methods over IQueryable that can generate expressions a filter based on odata query syntax. 
 
 </Description>
     <PackageProjectUrl>https://github.com/tocsoft/Linq2OData/</PackageProjectUrl>
@@ -18,17 +20,6 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="..\LICENCE.md">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
   </ItemGroup>
 
 </Project>

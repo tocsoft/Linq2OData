@@ -4,23 +4,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Linq2OData.Server.Tests.Models;
-using NUnit.Framework;
+using Xunit;
 
 namespace Linq2OData.Server.Tests
 {
-    [TestFixture]
+
     public class MaxRows
     {
         IQueryable<Models.TestObject> ctx;
-        [SetUp]
-        public void setup()
+        public MaxRows()
         {
             ctx = Enumerable.Range(0, 99999)
                 .Select(x => new TestObject() { intProperty = x }).ToList()
                 .AsQueryable();
         }
 
-        [Test]
+        [Fact]
         public void ReturnAllRowsIfTopOrMaxNotSet()
         {
 
@@ -30,10 +29,10 @@ namespace Linq2OData.Server.Tests
             });
 
 
-            Assert.AreEqual(ctx.Count(), odata.Count());
+            Assert.Equal(ctx.Count(), odata.Count());
 
         }
-        [Test]
+        [Fact]
         public void ReturnTopCountRows()
         {
 
@@ -43,11 +42,11 @@ namespace Linq2OData.Server.Tests
             });
 
 
-            Assert.AreEqual(10, odata.Count());
+            Assert.Equal(10, odata.Count());
 
         }
 
-        [Test]
+        [Fact]
         public void ReturnMaxCountRows()
         {
 
@@ -56,15 +55,15 @@ namespace Linq2OData.Server.Tests
                 //{ "$top", "10"}
             }, new Linq2ODataSettings { MaxRows = 10 });
 
-            Assert.AreEqual(10, odata.Count());
+            Assert.Equal(10, odata.Count());
 
         }
 
-        [Test]
-        [TestCase(10, 20, 10)]
-        [TestCase(20, 10, 10)]
-        [TestCase(100, 23, 23)]
-        [TestCase(2, 23, 2)]
+        [Theory]
+        [InlineData(10, 20, 10)]
+        [InlineData(20, 10, 10)]
+        [InlineData(100, 23, 23)]
+        [InlineData(2, 23, 2)]
         public void ReturnLowestMaxOrTop(int max, int top, int expected)
         {
             var odata = ctx.Filter(new Dictionary<string, string>
@@ -72,7 +71,7 @@ namespace Linq2OData.Server.Tests
                 { "$top", top.ToString()}
             }, new Linq2ODataSettings { MaxRows = max });
 
-            Assert.AreEqual(expected, odata.Count());
+            Assert.Equal(expected, odata.Count());
         }
     }
 }

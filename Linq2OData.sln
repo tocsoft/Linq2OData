@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29512.175
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Linq2OData.Client.Tests", "Linq2OData.Client.Tests\Linq2OData.Client.Tests.csproj", "{76B61EBD-C3B9-4CF4-B9D9-C79F169FEF5C}"
 EndProject
@@ -13,19 +13,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{FDE08A0B
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{F9FC5F08-C69C-47A1-B1DD-0E78B516C930}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Linq2OData.Server.Shared", "Linq2OData.Server.Shared\Linq2OData.Server.Shared.shproj", "{C4B13132-4A7A-4334-A5B3-6C8BFBE67C82}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Linq2OData.Server.DotNet", "Linq2OData.Server.DotNet\Linq2OData.Server.DotNet.csproj", "{5DEDD424-0AD6-4417-9DB2-1CBCD600BE17}"
-EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Linq2OData.Server.Shared.Interfaces", "Linq2OData.Server.Shared.Interfaces\Linq2OData.Server.Shared.Interfaces.shproj", "{FA35E76F-E084-44B8-AE92-2CE179BF5326}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Linq2OData.Server", "Linq2OData.Server\Linq2OData.Server.csproj", "{69E49BB0-8E1A-4060-9FFA-52288B03D6DE}"
 EndProject
 Global
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		Linq2OData.Server.Shared\Linq2OData.Server.Shared.projitems*{c4b13132-4a7a-4334-a5b3-6c8bfbe67c82}*SharedItemsImports = 13
-		Linq2OData.Server.Shared.Interfaces\Linq2OData.Server.Shared.Interfaces.projitems*{fa35e76f-e084-44b8-ae92-2ce179bf5326}*SharedItemsImports = 13
-		Linq2OData.Server.Shared.Interfaces\Linq2OData.Server.Shared.Interfaces.projitems*{5dedd424-0ad6-4417-9db2-1cbcd600be17}*SharedItemsImports = 4
-		Linq2OData.Server.Shared\Linq2OData.Server.Shared.projitems*{5dedd424-0ad6-4417-9db2-1cbcd600be17}*SharedItemsImports = 4
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -43,10 +33,10 @@ Global
 		{8E3E5D68-EA44-4D49-B99D-C83842113D84}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8E3E5D68-EA44-4D49-B99D-C83842113D84}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8E3E5D68-EA44-4D49-B99D-C83842113D84}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5DEDD424-0AD6-4417-9DB2-1CBCD600BE17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5DEDD424-0AD6-4417-9DB2-1CBCD600BE17}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5DEDD424-0AD6-4417-9DB2-1CBCD600BE17}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5DEDD424-0AD6-4417-9DB2-1CBCD600BE17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69E49BB0-8E1A-4060-9FFA-52288B03D6DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69E49BB0-8E1A-4060-9FFA-52288B03D6DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69E49BB0-8E1A-4060-9FFA-52288B03D6DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69E49BB0-8E1A-4060-9FFA-52288B03D6DE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -54,8 +44,9 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{76B61EBD-C3B9-4CF4-B9D9-C79F169FEF5C} = {FDE08A0B-1135-47F9-A60B-61BDC5FD0F41}
 		{8E3E5D68-EA44-4D49-B99D-C83842113D84} = {FDE08A0B-1135-47F9-A60B-61BDC5FD0F41}
-		{C4B13132-4A7A-4334-A5B3-6C8BFBE67C82} = {F9FC5F08-C69C-47A1-B1DD-0E78B516C930}
-		{5DEDD424-0AD6-4417-9DB2-1CBCD600BE17} = {F9FC5F08-C69C-47A1-B1DD-0E78B516C930}
-		{FA35E76F-E084-44B8-AE92-2CE179BF5326} = {F9FC5F08-C69C-47A1-B1DD-0E78B516C930}
+		{69E49BB0-8E1A-4060-9FFA-52288B03D6DE} = {F9FC5F08-C69C-47A1-B1DD-0E78B516C930}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3E73BCC5-EE74-4B5A-97D5-DCBE3714AF79}
 	EndGlobalSection
 EndGlobal

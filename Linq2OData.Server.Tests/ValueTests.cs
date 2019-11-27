@@ -3,20 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using NUnit.Framework;
+using Xunit;
 
 namespace Linq2OData.Server.Tests
 {
-    [TestFixture]
+    
     public class ValueTests
     {
         IQueryable<Models.TestObject> ctx;
-        [SetUp]
-        public void setup()
+        public ValueTests()
         {
             ctx = new List<Models.TestObject>().AsQueryable();
         }
-        [Test]
+        [Fact]
         public void String()
         {
 
@@ -26,10 +25,10 @@ namespace Linq2OData.Server.Tests
 
             var expected = ctx.Where(x => x.stringProperty == "string");
 
-            AssertExpression.AreEqual(expected.Expression, odata.Expression);
+            AssertExpression.Equal(expected.Expression, odata.Expression);
 
         }
-        [Test]
+        [Fact]
         public void EnumValue()
         {
             var odata = ctx.Filter(new Dictionary<string, string> {
@@ -38,10 +37,10 @@ namespace Linq2OData.Server.Tests
 
             var expected = ctx.Where(x => x.enumProperty == Models.TestObjectEnum.opt1);
 
-            AssertExpression.AreEqual(expected.Expression, odata.Expression);
+            AssertExpression.Equal(expected.Expression, odata.Expression);
 
         }
-        [Test]
+        [Fact]
         public void EnumText()
         {
             var odata = ctx.Filter(new Dictionary<string, string> {
@@ -50,53 +49,53 @@ namespace Linq2OData.Server.Tests
 
             var expected = ctx.Where(x => x.enumProperty == Models.TestObjectEnum.opt1);
 
-            AssertExpression.AreEqual(expected.Expression, odata.Expression);
+            AssertExpression.Equal(expected.Expression, odata.Expression);
         }
 
-        [Test]
+        [Fact]
         public void Bool()
         {
             var odata = ctx.Filter("boolProperty eq True");
             var expected = ctx.Where(x => x.boolProperty == true);
 
-            AssertExpression.AreEqual(expected, odata);
+            AssertExpression.Equal(expected, odata);
         }
 
-        [Test]
+        [Fact]
         public void Int()
         {
             var odata = ctx.Filter("intProperty eq 99");
             var expected = ctx.Where(x => x.intProperty == 99);
 
-            AssertExpression.AreEqual(expected, odata);
+            AssertExpression.Equal(expected, odata);
         }
 
-        [Test]
+        [Fact]
         public void Guid()
         {
             var odata = ctx.Filter("guidProperty eq guid'61CA9677-CABA-44A0-A187-7C86A8E0EAC3'");
             var guid = new System.Guid("61CA9677-CABA-44A0-A187-7C86A8E0EAC3");
             var expected = ctx.Where(x => x.guidProperty == guid);
 
-            AssertExpression.AreEqual(expected, odata);
+            AssertExpression.Equal(expected, odata);
         }
-        [Test]
+        [Fact]
         public void Guid_lower()
         {
             var odata = ctx.Filter("guidProperty eq guid'61ca9677-caba-44a0-a187-7c86a8e0eac3'");
             var guid = new System.Guid("61CA9677-CABA-44A0-A187-7C86A8E0EAC3");
             var expected = ctx.Where(x => x.guidProperty == guid);
 
-            AssertExpression.AreEqual(expected, odata);
+            AssertExpression.Equal(expected, odata);
         }
-        [Test]
+        [Fact]
         public void NullableGuid()
         {
             var odata = ctx.Filter("guidNullProperty eq null");
             
             var expected = ctx.Where(x => x.guidNullProperty == null);
 
-            Assert.AreEqual(expected.Expression.ToString(), odata.Expression.ToString());
+            Assert.Equal(expected.Expression.ToString(), odata.Expression.ToString());
             //skip true comparison as there must be subtle difference need to investigate more
             //AssertExpression.AreEqual(expected, odata);
         }

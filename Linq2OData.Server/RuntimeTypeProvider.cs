@@ -23,10 +23,14 @@ namespace Linq2OData.Server
 
         static RuntimeTypeProvider()
         {
-            ModuleBuilder = Thread
-                .GetDomain()
+            ModuleBuilder = AssemblyBuilder
                 .DefineDynamicAssembly(AssemblyName, AssemblyBuilderAccess.Run)
                 .DefineDynamicModule(AssemblyName.Name);
+
+            //ModuleBuilder = Thread
+            //    .GetDomain()
+            //    .DefineDynamicAssembly(AssemblyName, AssemblyBuilderAccess.Run)
+            //    .DefineDynamicModule(AssemblyName.Name);
         }
 
         /// <summary>
