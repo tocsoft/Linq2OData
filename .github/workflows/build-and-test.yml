@@ -41,7 +41,6 @@ jobs:
     - uses: actions/checkout@v1
       
     - name: Run tests
-      shell: pwsh
       run: dotnet test -c release
 
   Publish:
@@ -52,7 +51,6 @@ jobs:
     - uses: actions/checkout@v1
     
     - name: Build
-      shell: pwsh
       run: dotnet pack -c release -o artifacts
 
     - name : install nuget
