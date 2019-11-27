@@ -11,24 +11,21 @@ on:
       - master
     
 jobs:
-  # Coverage:
-  #   runs-on:   windows-latest
-  #   needs: [Build]
-  #   steps:      
-  #   - uses: actions/checkout@v1
+  Coverage:
+    runs-on: windows-latest
+    needs: [Build]
+    steps:      
+    - uses: actions/checkout@v1
     
-  #   - name: Generate Test Coverage
-  #     shell: pwsh
-  #     run: ./tests/CodeCoverage/CodeCoverage.ps1
-  #     env:
-  #       CI : True
+    - name: Generate Test Coverage
+      shell: pwsh
+      run: dotnet test -c release /p:CoverletOutputPath=../
 
-  #   - name: Update codecov
-  #     uses: iansu/codecov-action-node@v1.0.0
-  #     with:
-  #       token: ${{secrets.CODECOV_TOKEN}}
-  #       file: "ImageSharp.Coverage.xml"
-  #       flags: unittests
+    - name: Update codecov
+      uses: iansu/codecov-action-node@v1.0.0
+      with:
+        token: ${{secrets.CODECOV_TOKEN}}
+        flags: unittests
  
   Build:
     strategy:
