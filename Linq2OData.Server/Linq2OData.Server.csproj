@@ -18,10 +18,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="..\LICENCE.md">
+      <Visible>False</Visible>
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+
+  <ItemGroup>
     <PackageReference Include="GitVersionTask" Version="5.1.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
 
+  <Target Name="ErrorPackOnLinux" BeforeTargets="Pack" Condition="$([MSBuild]::IsOsPlatform('Windows'))">
+    <Error Text="Can only create a full package on windows as we need to generate full framework assets" />
+  </Target>
 </Project>

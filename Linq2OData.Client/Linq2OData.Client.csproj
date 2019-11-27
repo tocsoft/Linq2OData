@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <None Include="..\LICENCE.md">
+      <Visible>False</Visible>
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
