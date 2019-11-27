@@ -1,8 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp2.0;netcoreapp3.0;net461</TargetFrameworks>
-   <Authors>Tocsoft</Authors>
+    <TargetFrameworks>netcoreapp2.0;netcoreapp3.0</TargetFrameworks>
+    <TargetFrameworks Condition="$([MSBuild]::IsOsPlatform('Windows'))">$(TargetFrameworks);net461</TargetFrameworks>
+
+    <Authors>Tocsoft</Authors>
     <LangVersion>8.0</LangVersion>
     <Nullable>enable</Nullable>
     <Description>Extension methods over IQueryable that can generate expressions a filter based on odata query syntax. 
