@@ -33,7 +33,7 @@
     </PackageReference>
   </ItemGroup>
 
-  <Target Name="ErrorPackOnLinux" BeforeTargets="Pack" Condition="$([MSBuild]::IsOsPlatform('Windows'))">
+  <Target Name="ErrorPackOnLinux" BeforeTargets="Pack" Condition="!$([MSBuild]::IsOsPlatform('Windows'))">
     <Error Text="Can only create a full package on windows as we need to generate full framework assets" />
   </Target>
 </Project>
