@@ -14,6 +14,8 @@ jobs:
   Coverage:
     runs-on: windows-latest
     needs: [Build]
+    env:
+      MSBUILDSINGLELOADCONTEXT: 1
     steps:      
     - uses: actions/checkout@v1
     
@@ -45,6 +47,8 @@ jobs:
     runs-on: windows-latest
     needs: [Build]
     if : github.event_name == 'push'
+    env:
+      MSBUILDSINGLELOADCONTEXT: 1
     steps:      
     - uses: actions/checkout@v1
     
