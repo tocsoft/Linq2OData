@@ -12,4 +12,10 @@ namespace Linq2OData.Client
         IEnumerable<TType> Execute<TType>(IEnumerable<KeyValuePair<string, string>> queryStringParamaters);
         IEnumerable Execute(Type type, IEnumerable<KeyValuePair<string, string>> queryStringParamaters);
     }
+
+    public interface IAsyncODataDataClient
+    {
+        Task<IEnumerable<TType>> Execute<TType>(IEnumerable<KeyValuePair<string, string>> queryStringParamaters);
+        Task<IEnumerable> Execute(Type type, IEnumerable<KeyValuePair<string, string>> queryStringParamaters);
+    }
 }
