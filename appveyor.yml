@@ -1,6 +1,8 @@
 install:
   - choco install gitversion.portable -pre -y
-
+environment:
+  MSBUILDSINGLELOADCONTEXT: 1
+  
 nuget:
   disable_publish_on_pr: true
 

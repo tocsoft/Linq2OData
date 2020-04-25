@@ -33,7 +33,8 @@ jobs:
           os: [ubuntu-latest, windows-latest]
 
     runs-on:  ${{ matrix.os }}
-
+    env:
+      MSBUILDSINGLELOADCONTEXT: 1
     steps:      
     - uses: actions/checkout@v1
       
